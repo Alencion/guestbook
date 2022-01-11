@@ -8,6 +8,9 @@
         <h1 class="mt-4">GuestBook Modify Page</h1>
 
         <form action="/guestbook/modify" method="post">
+
+            <input type="hidden" name="page" th:value="${requestDTO.page}">
+
             <div class="form-group">
                 <label>Gno</label>
                 <input type="text" class="form-control" name="gno" th:value="${dto.gno}" readonly>
@@ -38,8 +41,8 @@
         </form>
 
 
-        <button type="button" class="btn btn-primary">Modify</button>
-        <button type="button" class="btn btn-info">List</button>
+        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
+        <button type="button" class="btn btn-info listBtn">List</button>
         <button type="button" class="btn btn-danger">Remove</button>
 
     </th:block>

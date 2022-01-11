@@ -28,4 +28,9 @@ public class GuestbookController {
 
         model.addAttribute("result", guestbookService.getList(pageRequestDTO));
     }
+
+    @GetMapping("/register")
+    public void register(){
+
+    }
 }

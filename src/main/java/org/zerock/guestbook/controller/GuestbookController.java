@@ -6,7 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.zerock.guestbook.repository.GuestbookRepository;
+import org.zerock.guestbook.dto.PageRequestDTO;
+import org.zerock.guestbook.service.GuestbookService;
 
 @Controller
 @Slf4j
@@ -14,7 +15,7 @@ import org.zerock.guestbook.repository.GuestbookRepository;
 public class GuestbookController {
 
     @Autowired
-    public GuestbookRepository guestbookRepository;
+    public GuestbookService guestbookService;
 
     @GetMapping("/")
     public String index() {
@@ -22,9 +23,9 @@ public class GuestbookController {
     }
 
     @GetMapping("/list")
-    public void list(Model model) {
+    public void list(PageRequestDTO pageRequestDTO, Model model) {
         log.info("list...........");
 
-        model.addAttribute("result", guestbookRepository.findAll());
+        model.addAttribute("result", guestbookService.getList(pageRequestDTO));
     }
 }

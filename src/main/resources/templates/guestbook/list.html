@@ -5,7 +5,26 @@
 
     <th:block th:fragment="content">
 
-        <h1>GuestBook List Page</h1>
+        <h1 class="mt-4">GuestBook List Page</h1>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Gno</th>
+                <th scope="col">Title</th>
+                <th scope="col">Regdate</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="dto : ${result}">
+                <th scope="row">[[${dto.gno}]]</th>
+                <td>[[${dto.title}]]</td>
+                <td>[[${dto.writer}]]</td>
+                <td>[[${#temporals.format(dto.registerDate, 'yyyy/mm/dd')}]]</td>
+            </tr>
+            </tbody>
+        </table>
 
     </th:block>
 

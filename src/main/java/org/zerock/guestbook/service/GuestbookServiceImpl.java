@@ -53,6 +53,11 @@ public class GuestbookServiceImpl implements GuestbookService {
                 .ifPresent(entity -> this.update(entity, dto));
     }
 
+    @Override
+    public void remove(Long gno) {
+        this.guestbookRepository.deleteById(gno);
+    }
+
     private void update(Guestbook entity, GuestbookDTO dto) {
         entity.changeTitle(dto.getTitle());
         entity.changeContent(dto.getContent());

@@ -46,4 +46,17 @@ public class GuestbookServiceImpl implements GuestbookService {
                 .map(this::entityToDto)
                 .orElse(null);
     }
+
+    @Override
+    public void modify(GuestbookDTO dto) {
+        this.guestbookRepository.findById(dto.getGno())
+                .ifPresent(entity -> this.update(entity, dto));
+    }
+
+    private void update(Guestbook entity, GuestbookDTO dto) {
+        entity.changeTitle(dto.getTitle());
+        entity.changeContent(dto.getContent());
+
+        this.guestbookRepository.save(entity);
+    }
 }

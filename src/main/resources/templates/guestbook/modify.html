@@ -43,7 +43,7 @@
 
         <button type="button" class="btn btn-primary modifyBtn">Modify</button>
         <button type="button" class="btn btn-info listBtn">List</button>
-        <button type="button" class="btn btn-danger">Remove</button>
+        <button type="button" class="btn btn-danger removeBtn">Remove</button>
 
     </th:block>
 
@@ -74,6 +74,19 @@
         actionForm
             .attr("action", "/guestbook/list")
             .attr("method", "get");
+
+        actionForm.submit();
+    });
+
+    $(".removeBtn").click(function() {
+
+        if(!confirm("삭제하시겠습니까?")){
+            return ;
+        }
+
+        actionForm
+            .attr("action", "/guestbook/remove")
+            .attr("method", "post");
 
         actionForm.submit();
     });

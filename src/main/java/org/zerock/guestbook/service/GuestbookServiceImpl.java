@@ -1,21 +1,18 @@
 package org.zerock.guestbook.service;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.zerock.guestbook.dto.GuestbookDTO;
 import org.zerock.guestbook.dto.PageRequestDTO;
 import org.zerock.guestbook.dto.PageResultDTO;
 import org.zerock.guestbook.entity.Guestbook;
-import org.zerock.guestbook.entity.QGuestbook;
+import org.zerock.guestbook.entity.Member;
 import org.zerock.guestbook.repository.GuestbookRepository;
 
-import java.util.Objects;
+import java.util.function.Function;
 
 @Service
 @Slf4j
@@ -38,20 +35,26 @@ public class GuestbookServiceImpl implements GuestbookService {
     }
 
     @Override
-    public PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO pageRequestDTO) {
-        Pageable pageable = pageRequestDTO.getPageable(Sort.by("gno").descending());
+    public PageResultDTO<GuestbookDTO, Object[]> getList(PageRequestDTO pageRequestDTO) {
 
-        BooleanBuilder booleanBuilder = this.getSearchCondition(pageRequestDTO);
-        Page<Guestbook> result = this.guestbookRepository.findAll(booleanBuilder, pageable);
+        Function<Object[], GuestbookDTO> fn = (en -> entityToDto((Guestbook) en[0], (Member) en[1]));
 
-        return new PageResultDTO<>(result, this::entityToDto);
+        Page<Object[]> result = this.guestbookRepository.searchPage(
+                pageRequestDTO.getType(),
+                pageRequestDTO.getKeyword(),
+                pageRequestDTO.getPageable(Sort.by("gno").descending())
+        );
+
+        return new PageResultDTO<>(result, fn);
     }
 
     @Override
     public GuestbookDTO read(Long gno) {
-        return this.guestbookRepository.findById(gno)
-                .map(this::entityToDto)
-                .orElse(null);
+        Object result = this.guestbookRepository.getGuestbookByGno(gno);
+
+        Object[] arr = (Object[]) result;
+
+        return entityToDto((Guestbook) arr[0], (Member) arr[1]);
     }
 
     @Override
@@ -70,49 +73,5 @@ public class GuestbookServiceImpl implements GuestbookService {
         entity.changeContent(dto.getContent());
 
         this.guestbookRepository.save(entity);
-    }
-
-    private BooleanBuilder getSearchCondition(PageRequestDTO requestDTO) {
-        String type = requestDTO.getType();
-        String keyword = requestDTO.getKeyword();
-
-        QGuestbook qGuestbook = QGuestbook.guestbook;
-        BooleanBuilder booleanBuilder = getBooleanBuilder(qGuestbook);
-
-        if (isStringEmpty(type)) {
-            return booleanBuilder;
-        }
-
-        BooleanBuilder conditionBuilder = getConditionBuilder(type, qGuestbook, keyword);
-        booleanBuilder.and(conditionBuilder);
-
-        return booleanBuilder;
-    }
-
-    private BooleanBuilder getBooleanBuilder(QGuestbook qGuestbook) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        BooleanExpression expression = qGuestbook.gno.gt(0L);
-
-        booleanBuilder.and(expression);
-        return booleanBuilder;
-    }
-
-    private BooleanBuilder getConditionBuilder(String type, QGuestbook qGuestbook, String keyword) {
-        BooleanBuilder conditionBuilder = new BooleanBuilder();
-        if (type.contains("t")) {
-            conditionBuilder.or(qGuestbook.title.contains(keyword));
-        }
-        if (type.contains("c")) {
-            conditionBuilder.or(qGuestbook.content.contains(keyword));
-        }
-        if (type.contains("w")) {
-            conditionBuilder.or(qGuestbook.writer.name.contains(keyword));
-        }
-        return conditionBuilder;
-    }
-
-    private boolean isStringEmpty(String type) {
-        return Objects.isNull(type) || type.trim().length() == 0;
     }
 }

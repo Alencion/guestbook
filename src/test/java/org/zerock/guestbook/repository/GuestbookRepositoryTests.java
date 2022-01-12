@@ -104,4 +104,14 @@ public class GuestbookRepositoryTests {
 
         this.guestbookRepository.search1();
     }
+
+    @Test
+    void testSearchPage() {
+
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by("gno").descending()
+                        .and(Sort.by("title").ascending()));
+
+        this.guestbookRepository.searchPage("t", "1", pageable);
+    }
 }

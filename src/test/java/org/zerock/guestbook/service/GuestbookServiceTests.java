@@ -20,7 +20,7 @@ public class GuestbookServiceTests {
         GuestbookDTO guestbookDTO = GuestbookDTO.builder()
                 .title("Sample Title...")
                 .content("Sample Content...")
-                .writer("user0")
+                .writerName("user0")
                 .build();
 
         // when & then

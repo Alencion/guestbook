@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.zerock.guestbook.entity.Guestbook;
+import org.zerock.guestbook.entity.Member;
 import org.zerock.guestbook.entity.QGuestbook;
 
 import java.util.Optional;
@@ -26,7 +27,14 @@ public class GuestbookRepositoryTests {
 
         IntStream.rangeClosed(1, 300).forEach(i -> {
 
-            Guestbook guestbook = Guestbook.builder().title("Title..." + i).content("Content..." + i).writer("user" + (i % 10)).build();
+            Member member = Member.builder().email("user" + ((i - 1) % 100 + 1) + "@aaa.com").build();
+
+            Guestbook guestbook = Guestbook.builder()
+                    .title("Title..." + i)
+                    .content("Content..." + i)
+                    .writer(member)
+                    .build();
+
             System.out.println(guestbookRepository.save(guestbook));
         });
     }

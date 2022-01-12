@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.zerock.guestbook.dto.GuestbookDTO;
 import org.zerock.guestbook.dto.PageRequestDTO;
 import org.zerock.guestbook.dto.PageResultDTO;
-import org.zerock.guestbook.entity.Guestbook;
 
 @SpringBootTest
 public class GuestbookServiceTests {
@@ -33,7 +32,7 @@ public class GuestbookServiceTests {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
 
         // when
-        PageResultDTO<GuestbookDTO, Guestbook> resultDTO = this.service.getList(pageRequestDTO);
+        PageResultDTO<GuestbookDTO, Object[]> resultDTO = this.service.getList(pageRequestDTO);
 
         // then
         System.out.println("PREV: " + resultDTO.isPrev());
@@ -59,7 +58,7 @@ public class GuestbookServiceTests {
                 .build();
 
         //when
-        PageResultDTO<GuestbookDTO, Guestbook> resultDTO = this.service.getList(pageRequestDTO);
+        PageResultDTO<GuestbookDTO, Object[]> resultDTO = this.service.getList(pageRequestDTO);
 
         //then
         System.out.println("PREV: " + resultDTO.isPrev());

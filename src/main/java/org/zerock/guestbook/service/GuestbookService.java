@@ -5,7 +5,6 @@ import org.zerock.guestbook.dto.PageRequestDTO;
 import org.zerock.guestbook.dto.PageResultDTO;
 import org.zerock.guestbook.entity.Guestbook;
 import org.zerock.guestbook.entity.Member;
-import org.zerock.guestbook.repository.MemberRepository;
 
 public interface GuestbookService {
 
@@ -19,7 +18,9 @@ public interface GuestbookService {
 
     void remove(Long gno);
 
-    default Guestbook dtoToEntity(GuestbookDTO dto, Member writer) {
+    default Guestbook dtoToEntity(GuestbookDTO dto) {
+        Member writer = Member.builder().email(dto.getWriterEmail()).build();
+
         return Guestbook.builder()
                 .gno(dto.getGno())
                 .title(dto.getTitle())

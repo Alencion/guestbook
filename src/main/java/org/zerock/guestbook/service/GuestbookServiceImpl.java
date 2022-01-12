@@ -7,17 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import org.zerock.guestbook.dto.GuestbookDTO;
 import org.zerock.guestbook.dto.PageRequestDTO;
 import org.zerock.guestbook.dto.PageResultDTO;
 import org.zerock.guestbook.entity.Guestbook;
-import org.zerock.guestbook.entity.Member;
 import org.zerock.guestbook.entity.QGuestbook;
 import org.zerock.guestbook.repository.GuestbookRepository;
-import org.zerock.guestbook.repository.MemberRepository;
 
 import java.util.Objects;
 
@@ -27,7 +23,6 @@ import java.util.Objects;
 public class GuestbookServiceImpl implements GuestbookService {
 
     private final GuestbookRepository guestbookRepository;
-    private final MemberRepository memberRepository;
 
     @Override
     public Long register(GuestbookDTO dto) {
@@ -35,10 +30,7 @@ public class GuestbookServiceImpl implements GuestbookService {
         log.info("DTO-----------------------");
         log.info(dto.toString());
 
-        Member writer = this.memberRepository.findById(dto.getWriterEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found Writer"));
-
-        Guestbook entity = dtoToEntity(dto, writer);
+        Guestbook entity = dtoToEntity(dto);
         log.info(entity.toString());
 
         guestbookRepository.save(entity);

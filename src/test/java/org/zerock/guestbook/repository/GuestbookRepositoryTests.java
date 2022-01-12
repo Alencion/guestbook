@@ -98,4 +98,10 @@ public class GuestbookRepositoryTests {
         //then
         result.stream().forEach(System.out::println);
     }
+
+    @Test
+    void testSearch1() {
+
+        this.guestbookRepository.search1();
+    }
 }

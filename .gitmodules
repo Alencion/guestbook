@@ -1,0 +1,3 @@
+[submodule "mreview"]
+	path = mreview
+	url = git@github.com:Alencion/mreview.git

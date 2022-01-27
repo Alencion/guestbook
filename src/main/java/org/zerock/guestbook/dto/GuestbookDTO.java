@@ -16,7 +16,8 @@ public class GuestbookDTO {
     private Long gno;
     private String title;
     private String content;
-    private String writer;
+    private String writerEmail;
+    private String writerName;
     private LocalDateTime registerDate, modifyDate;
 
 }
